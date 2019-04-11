@@ -19,6 +19,7 @@ def open_cricinfo_and_begin_mining():
         'runs'
     ]
     )
+    batsman_info_list = []
     for each_link in links:
         scorecard_links.append(baseurl + each_link['href'])
         scorecard_link = baseurl + each_link['href']
@@ -30,9 +31,13 @@ def open_cricinfo_and_begin_mining():
             batsmen_name = each_batsmen[0].string
             run_scored_obj = each_batsmen_obj.select("div.cell.runs")
             run_scored = run_scored_obj[0].string
-            break
+            batsman_data = Batsman(name=batsmen_name, runs=run_scored)
+            batsman_info_list.append(batsman_data)
 
-    
+    for each_batsmen_info in batsman_info_list:
+        print(each_batsmen_info.name)
+        print(each_batsmen_info.runs)
+        print("/n")
 
         
 
