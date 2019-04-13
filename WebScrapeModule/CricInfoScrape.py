@@ -1,6 +1,7 @@
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
+import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 import collections
@@ -34,11 +35,8 @@ def open_cricinfo_and_begin_mining():
             batsman_data = Batsman(name=batsmen_name, runs=run_scored)
             batsman_info_list.append(batsman_data)
 
-    for each_batsmen_info in batsman_info_list:
-        print(each_batsmen_info.name)
-        print(each_batsmen_info.runs)
-        print("/n")
-
+    df = pd.DataFrame.from_records(batsman_info_list, columns=Batsman._fields)
+    print(df)
         
 
 open_cricinfo_and_begin_mining()
