@@ -16,27 +16,30 @@ def open_cricinfo_and_begin_mining():
     scorecard_links = []
     #Named Tuple
     Batsman = collections.namedtuple('Batsman', [
-        'name',
-        'runs'
+        'BatsmanName',
+        'RunsScored'
     ]
     )
-    batsman_info_list = []
+
+    batsman_frame_list = []
     for each_link in links:
         scorecard_links.append(baseurl + each_link['href'])
         scorecard_link = baseurl + each_link['href']
         scorecard_response = requests.get(scorecard_link)
         scorecard_obj = BeautifulSoup(scorecard_response.content, 'html.parser')
         batsmen_list = scorecard_obj.select("div.scorecard-section.batsmen div.wrap.batsmen")
+        batsman_info_list = []
         for each_batsmen_obj in batsmen_list:
             each_batsmen = each_batsmen_obj.select("div.cell.batsmen a")
             batsmen_name = each_batsmen[0].string
             run_scored_obj = each_batsmen_obj.select("div.cell.runs")
             run_scored = run_scored_obj[0].string
-            batsman_data = Batsman(name=batsmen_name, runs=run_scored)
+            batsman_data = Batsman(BatsmanName=batsmen_name, RunsScored=run_scored)
             batsman_info_list.append(batsman_data)
+        df = pd.DataFrame.from_records(batsman_info_list, columns=Batsman._fields, )
+        batsman_frame_list.append(df)
 
-    df = pd.DataFrame.from_records(batsman_info_list, columns=Batsman._fields)
-    print(df)
+    print(batsman_frame_list)
         
 
 open_cricinfo_and_begin_mining()
